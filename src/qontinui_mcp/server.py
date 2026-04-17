@@ -23,6 +23,7 @@ from qontinui_mcp.database.search import (
     search_nodes_by_category,
     search_workflows,
 )
+from qontinui_mcp.tools.events import search_events
 from qontinui_mcp.tools.execution import (
     assert_state_visible,
     capture_checkpoint,
@@ -471,6 +472,43 @@ async def list_tools() -> list[Tool]:
                 "required": ["checkpoint_name", "checkpoint_definition"],
             },
         ),
+        # Event Log Search (unified FTS across runner's Postgres event tables)
+        Tool(
+            name="search_events",
+            description=(
+                "Full-text search across qontinui-runner's Postgres event tables "
+                "(activity_timeline, observations, deferred_questions, error_events). "
+                "Returns a ranked list of matching rows with source_table, "
+                "record_id, snippet, ts, and score. Requires the 'events' extra "
+                "(psycopg) and a reachable RUNNER_DATABASE_URL."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "query": {
+                        "type": "string",
+                        "description": (
+                            "Free-text query. Passed through "
+                            "plainto_tsquery('english', …)."
+                        ),
+                    },
+                    "since_iso": {
+                        "type": "string",
+                        "description": (
+                            "Lower bound on event timestamp as ISO-8601 "
+                            "(e.g. '2026-04-10T00:00:00Z'). Defaults to 7 "
+                            "days ago (UTC)."
+                        ),
+                    },
+                    "limit": {
+                        "type": "number",
+                        "description": "Maximum number of rows to return (default 50, capped at 500).",
+                        "default": 50,
+                    },
+                },
+                "required": ["query"],
+            },
+        ),
     ]
     return tools
 
@@ -740,6 +778,15 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
                 extract_ocr=extract_ocr,
             )
             result = cp_result.model_dump()
+
+        elif name == "search_events":
+            query = arguments.get("query", "")
+            if not query:
+                raise ValueError("query parameter is required")
+            since_iso = arguments.get("since_iso")
+            limit = int(arguments.get("limit", 50))
+            rows = search_events(query=query, since_iso=since_iso, limit=limit)
+            result = {"count": len(rows), "results": rows}
 
         else:
             raise ValueError(f"Unknown tool: {name}")
