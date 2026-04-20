@@ -6,7 +6,7 @@ import json
 import logging
 import sqlite3
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
     from qontinui_mcp.types import NodeMetadata, WorkflowTemplate
@@ -75,7 +75,8 @@ def load_workflows(conn: sqlite3.Connection, workflows: list[WorkflowTemplate]) 
         cursor.execute(
             """
             INSERT OR REPLACE INTO workflows
-            (id, name, description, category, tags, complexity, template, use_cases, customization_points)
+            (id, name, description, category, tags, complexity,
+             template, use_cases, customization_points)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
@@ -95,7 +96,7 @@ def load_workflows(conn: sqlite3.Connection, workflows: list[WorkflowTemplate]) 
     logger.info(f"Loaded {len(workflows)} workflows into database")
 
 
-def get_node(conn: sqlite3.Connection, node_id: str) -> dict | None:
+def get_node(conn: sqlite3.Connection, node_id: str) -> dict[str, Any] | None:
     """Get node by ID."""
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM nodes WHERE id = ?", (node_id,))
@@ -107,7 +108,7 @@ def get_node(conn: sqlite3.Connection, node_id: str) -> dict | None:
     return _parse_node_row(row)
 
 
-def get_workflow(conn: sqlite3.Connection, workflow_id: str) -> dict | None:
+def get_workflow(conn: sqlite3.Connection, workflow_id: str) -> dict[str, Any] | None:
     """Get workflow by ID."""
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM workflows WHERE id = ?", (workflow_id,))
@@ -119,7 +120,7 @@ def get_workflow(conn: sqlite3.Connection, workflow_id: str) -> dict | None:
     return _parse_workflow_row(row)
 
 
-def get_all_nodes(conn: sqlite3.Connection) -> list[dict]:
+def get_all_nodes(conn: sqlite3.Connection) -> list[dict[str, Any]]:
     """Get all nodes."""
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM nodes ORDER BY category, name")
@@ -127,7 +128,7 @@ def get_all_nodes(conn: sqlite3.Connection) -> list[dict]:
     return [_parse_node_row(row) for row in rows]
 
 
-def get_all_workflows(conn: sqlite3.Connection) -> list[dict]:
+def get_all_workflows(conn: sqlite3.Connection) -> list[dict[str, Any]]:
     """Get all workflows."""
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM workflows ORDER BY category, name")
@@ -135,7 +136,7 @@ def get_all_workflows(conn: sqlite3.Connection) -> list[dict]:
     return [_parse_workflow_row(row) for row in rows]
 
 
-def _parse_node_row(row: sqlite3.Row) -> dict:
+def _parse_node_row(row: sqlite3.Row) -> dict[str, Any]:
     """Parse a node row from database."""
     return {
         "id": row["id"],
@@ -149,7 +150,7 @@ def _parse_node_row(row: sqlite3.Row) -> dict:
     }
 
 
-def _parse_workflow_row(row: sqlite3.Row) -> dict:
+def _parse_workflow_row(row: sqlite3.Row) -> dict[str, Any]:
     """Parse a workflow row from database."""
     return {
         "id": row["id"],

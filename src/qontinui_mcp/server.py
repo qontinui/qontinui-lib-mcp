@@ -39,7 +39,7 @@ from qontinui_mcp.tools.expectations import (
     validate_expectations_config,
 )
 from qontinui_mcp.tools.generator import WorkflowGenerator
-from qontinui_mcp.types.models import CheckpointDefinition, WorkflowExpectations
+from qontinui_mcp.types.models import CheckpointDefinition
 from qontinui_mcp.utils.validation import validate_workflow_structure
 
 # Configure logging
@@ -61,7 +61,7 @@ def get_db_connection() -> sqlite3.Connection:
 server = Server("qontinui-mcp")
 
 
-@server.list_tools()
+@server.list_tools()  # type: ignore[no-untyped-call, untyped-decorator]
 async def list_tools() -> list[Tool]:
     """List all available tools."""
     tools = [
@@ -406,7 +406,16 @@ async def list_tools() -> list[Tool]:
                                 "items": {
                                     "type": "object",
                                     "properties": {
-                                        "type": {"type": "string", "enum": ["text_present", "text_absent", "no_duplicate_matches", "text_count", "text_in_region"]},
+                                        "type": {
+                                            "type": "string",
+                                            "enum": [
+                                                "text_present",
+                                                "text_absent",
+                                                "no_duplicate_matches",
+                                                "text_count",
+                                                "text_in_region",
+                                            ],
+                                        },
                                         "text": {"type": "string"},
                                         "case_sensitive": {"type": "boolean"},
                                         "expected_count": {"type": "number"},
@@ -451,7 +460,16 @@ async def list_tools() -> list[Tool]:
                                 "items": {
                                     "type": "object",
                                     "properties": {
-                                        "type": {"type": "string", "enum": ["text_present", "text_absent", "no_duplicate_matches", "text_count", "text_in_region"]},
+                                        "type": {
+                                            "type": "string",
+                                            "enum": [
+                                                "text_present",
+                                                "text_absent",
+                                                "no_duplicate_matches",
+                                                "text_count",
+                                                "text_in_region",
+                                            ],
+                                        },
                                         "text": {"type": "string"},
                                         "case_sensitive": {"type": "boolean"},
                                         "expected_count": {"type": "number"},
@@ -488,8 +506,7 @@ async def list_tools() -> list[Tool]:
                     "query": {
                         "type": "string",
                         "description": (
-                            "Free-text query. Passed through "
-                            "plainto_tsquery('english', …)."
+                            "Free-text query. Passed through " "plainto_tsquery('english', …)."
                         ),
                     },
                     "since_iso": {
@@ -513,7 +530,7 @@ async def list_tools() -> list[Tool]:
     return tools
 
 
-@server.call_tool()
+@server.call_tool()  # type: ignore[untyped-decorator]
 async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
     """Handle tool calls."""
     conn = get_db_connection()
@@ -805,9 +822,7 @@ async def run_server() -> None:
     """Run the MCP server."""
     logger.info("Starting Qontinui MCP Server...")
     async with stdio_server() as (read_stream, write_stream):
-        await server.run(
-            read_stream, write_stream, server.create_initialization_options()
-        )
+        await server.run(read_stream, write_stream, server.create_initialization_options())
 
 
 def main() -> None:

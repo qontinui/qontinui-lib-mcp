@@ -14,16 +14,16 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
-    from PIL import Image as PILImage
+    from PIL.Image import Image as PILImage
 else:
-    PILImage = Any  # type: ignore[misc]
+    PILImage = Any
 
 logger = logging.getLogger(__name__)
 
 # Check qontinui OCR availability
 QONTINUI_OCR_AVAILABLE = False
 try:
-    from qontinui.actions.basic.find.implementations.find_text.ocr_engines import (  # type: ignore[import-not-found]
+    from qontinui.actions.basic.find.implementations.find_text.ocr_engines import (
         TesseractEngine,
     )
 
@@ -62,7 +62,7 @@ def load_image(image_source: str) -> PILImage | None:
         PIL Image or None if loading fails
     """
     try:
-        from PIL import Image  # type: ignore[import-not-found]
+        from PIL import Image
 
         # Check if it's a base64 string
         if "," in image_source and (
@@ -107,16 +107,15 @@ def extract_text_with_qontinui(image: PILImage) -> str | None:
         return None
 
     try:
-        # Import numpy for qontinui compatibility
-        import numpy as np  # type: ignore[import-not-found]
-
-        from qontinui.model.element.region import Region  # type: ignore[import-not-found]
+        # Import numpy and qontinui for OCR compatibility
+        import numpy as np  # noqa: PLC0415
+        from qontinui.model.element.region import Region  # noqa: PLC0415
 
         # Convert PIL Image to numpy array
-        image_array = np.array(image)
+        image_array: Any = np.array(image)
 
         # Create a region covering the entire image
-        region = Region(x=0, y=0, w=image.width, h=image.height)
+        region = Region(x=0, y=0, width=image.width, height=image.height)
 
         # Initialize Tesseract engine
         engine = TesseractEngine(psm_mode=3, oem_mode=3, return_word_boxes=False)
@@ -161,7 +160,7 @@ def extract_text_with_pytesseract(image: PILImage) -> str | None:
         return None
 
     try:
-        import pytesseract  # type: ignore[import-not-found]
+        import pytesseract
 
         # Extract text with default configuration
         text: str = pytesseract.image_to_string(image, lang="eng")

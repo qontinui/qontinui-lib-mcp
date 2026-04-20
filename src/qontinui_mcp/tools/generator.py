@@ -12,7 +12,7 @@ import sqlite3
 import uuid
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any
+from typing import Any, cast
 
 from qontinui_mcp.database.search import search_nodes
 from qontinui_mcp.utils.validation import validate_workflow_structure
@@ -70,7 +70,8 @@ class WorkflowGenerator:
                     success=False,
                     error="Could not find relevant actions for the description",
                     suggestions=[
-                        "Try using more specific action verbs like 'click', 'type', 'find', 'wait'"
+                        "Try using more specific action verbs like"
+                        " 'click', 'type', 'find', 'wait'"
                     ],
                 )
 
@@ -198,7 +199,7 @@ class WorkflowGenerator:
     ) -> dict[str, Any]:
         """Customize a template workflow based on intent."""
         # Clone the template
-        workflow = json.loads(json.dumps(template))
+        workflow = cast(dict[str, Any], json.loads(json.dumps(template)))
 
         # Update basic info
         workflow["id"] = str(uuid.uuid4())
