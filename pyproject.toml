@@ -22,7 +22,6 @@ psycopg = { version = "^3.2", optional = true, extras = ["binary"] }
 events = ["psycopg"]
 
 [tool.poetry.group.dev.dependencies]
-black = "^24.0.0"
 ruff = "^0.1.0"
 mypy = "^1.8.0"
 pytest = "^8.0.0"
