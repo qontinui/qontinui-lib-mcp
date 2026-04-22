@@ -77,9 +77,8 @@ poetry install
 # Run in development
 poetry run python -m qontinui_mcp.server
 
-# Run linting
-poetry run black .
-poetry run isort .
+# Format + lint
+poetry run ruff format .
 poetry run ruff check .
 poetry run mypy src/
 ```
