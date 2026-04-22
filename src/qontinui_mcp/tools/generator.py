@@ -70,8 +70,7 @@ class WorkflowGenerator:
                     success=False,
                     error="Could not find relevant actions for the description",
                     suggestions=[
-                        "Try using more specific action verbs like"
-                        " 'click', 'type', 'find', 'wait'"
+                        "Try using more specific action verbs like 'click', 'type', 'find', 'wait'"
                     ],
                 )
 

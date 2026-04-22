@@ -17,7 +17,6 @@ from ..types.models import (
     CheckpointDefinition,
     CheckpointResult,
     ExpectationsEvaluationResult,
-    GlobalExpectations,
     OCRAssertion,
     OCRAssertionType,
     SuccessCriteriaType,
@@ -30,11 +29,15 @@ logger = logging.getLogger(__name__)
 # Try to import qontinui components
 QONTINUI_AVAILABLE = False
 try:
-    from qontinui.checkpointing import CheckpointService, CheckpointTrigger
+    from qontinui.checkpointing import CheckpointService, CheckpointTrigger  # noqa: F401
     from qontinui.execution.success_criteria import (
-        SuccessCriteria as QontinuiSuccessCriteria,
-        SuccessCriteriaEvaluator,
-        SuccessCriteriaType as QontinuiCriteriaType,
+        SuccessCriteria as QontinuiSuccessCriteria,  # noqa: F401
+    )
+    from qontinui.execution.success_criteria import (
+        SuccessCriteriaEvaluator,  # noqa: F401
+    )
+    from qontinui.execution.success_criteria import (
+        SuccessCriteriaType as QontinuiCriteriaType,  # noqa: F401
     )
 
     QONTINUI_AVAILABLE = True
@@ -211,7 +214,9 @@ def evaluate_ocr_assertion(
         elif assertion.assertion_type == OCRAssertionType.TEXT_ABSENT:
             passed = count == 0
             if not passed:
-                error = f"Text '{assertion.text}' should not be present but was found {count} time(s)"
+                error = (
+                    f"Text '{assertion.text}' should not be present but was found {count} time(s)"
+                )
 
         elif assertion.assertion_type == OCRAssertionType.NO_DUPLICATE_MATCHES:
             passed = count <= 1
@@ -532,9 +537,7 @@ def evaluate_workflow_expectations(
     summary = f"{passed_count}/{total_count} criteria passed"
 
     if checkpoint_results:
-        cp_passed = sum(
-            1 for cp in checkpoint_results if not cp.validation_errors
-        )
+        cp_passed = sum(1 for cp in checkpoint_results if not cp.validation_errors)
         summary += f", {cp_passed}/{len(checkpoint_results)} checkpoints passed"
 
     duration_ms = int((time.time() - start_time) * 1000)

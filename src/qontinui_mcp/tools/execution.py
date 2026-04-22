@@ -466,16 +466,12 @@ def capture_checkpoint(
 
                 # Extract OCR text if requested and OCR assertions are defined
                 if extract_ocr and checkpoint_def.ocr_assertions and is_ocr_available():
-                    logger.info(
-                        f"Extracting OCR text for checkpoint '{checkpoint_name}'"
-                    )
+                    logger.info(f"Extracting OCR text for checkpoint '{checkpoint_name}'")
                     ocr_text = extract_ocr_text(screenshot_result.image_base64)
 
                     if ocr_text is None:
                         validation_errors.append("OCR extraction failed")
-                        logger.warning(
-                            f"OCR extraction failed for checkpoint '{checkpoint_name}'"
-                        )
+                        logger.warning(f"OCR extraction failed for checkpoint '{checkpoint_name}'")
                     else:
                         logger.info(
                             f"Extracted {len(ocr_text)} characters from checkpoint '{checkpoint_name}'"
@@ -485,9 +481,7 @@ def capture_checkpoint(
                     logger.warning("OCR assertions defined but OCR not available")
 
             else:
-                validation_errors.append(
-                    f"Screenshot capture failed: {screenshot_result.error}"
-                )
+                validation_errors.append(f"Screenshot capture failed: {screenshot_result.error}")
                 logger.error(
                     f"Screenshot capture failed for checkpoint '{checkpoint_name}': {screenshot_result.error}"
                 )

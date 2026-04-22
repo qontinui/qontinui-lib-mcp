@@ -506,7 +506,7 @@ async def list_tools() -> list[Tool]:
                     "query": {
                         "type": "string",
                         "description": (
-                            "Free-text query. Passed through " "plainto_tsquery('english', …)."
+                            "Free-text query. Passed through plainto_tsquery('english', …)."
                         ),
                     },
                     "since_iso": {

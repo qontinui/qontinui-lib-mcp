@@ -12,9 +12,8 @@ This script:
 
 import sqlite3
 import time
-import json
 from pathlib import Path
-from typing import List, Tuple
+from typing import List
 
 # File paths
 SCRIPT_DIR = Path(__file__).parent
@@ -26,7 +25,7 @@ DB_FILE = SCRIPT_DIR / "qontinui.db"
 def execute_sql_file(conn: sqlite3.Connection, filepath: Path) -> None:
     """Execute a SQL file."""
     print(f"Executing {filepath.name}...")
-    with open(filepath, 'r') as f:
+    with open(filepath, "r") as f:
         sql_script = f.read()
     conn.executescript(sql_script)
     conn.commit()
@@ -41,7 +40,7 @@ def init_database(force: bool = False) -> sqlite3.Connection:
         return sqlite3.connect(DB_FILE)
 
     if DB_FILE.exists() and force:
-        print(f"Removing existing database...")
+        print("Removing existing database...")
         DB_FILE.unlink()
 
     print(f"\nInitializing database at {DB_FILE}")
@@ -79,16 +78,20 @@ def test_search_performance(conn: sqlite3.Connection, queries: List[str]) -> Non
 
     for query in queries:
         # Warm up
-        cursor.execute("""
+        cursor.execute(
+            """
             SELECT n.* FROM nodes n
             JOIN nodes_fts fts ON n.rowid = fts.rowid
             WHERE nodes_fts MATCH ?
-        """, (query,))
+        """,
+            (query,),
+        )
         cursor.fetchall()
 
         # Measure
         start = time.perf_counter()
-        cursor.execute("""
+        cursor.execute(
+            """
             SELECT n.id, n.type, n.name, n.description,
                    bm25(nodes_fts) as rank
             FROM nodes n
@@ -96,7 +99,9 @@ def test_search_performance(conn: sqlite3.Connection, queries: List[str]) -> Non
             WHERE nodes_fts MATCH ?
             ORDER BY rank
             LIMIT 10
-        """, (query,))
+        """,
+            (query,),
+        )
         results = cursor.fetchall()
         end = time.perf_counter()
 
