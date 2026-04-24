@@ -35,7 +35,7 @@ except ImportError:
 # Check pytesseract availability
 PYTESSERACT_AVAILABLE = False
 try:
-    import pytesseract  # type: ignore[import-not-found]  # noqa: F401
+    import pytesseract  # noqa: F401
 
     PYTESSERACT_AVAILABLE = True
     logger.info("pytesseract available")

@@ -153,7 +153,7 @@ def search_events(
         raise ValueError("query must be a non-empty string")
 
     try:
-        import psycopg  # type: ignore[import-not-found]  # noqa: PLC0415 — import-on-demand is intentional
+        import psycopg  # noqa: PLC0415 — import-on-demand is intentional
     except ImportError as exc:
         raise RuntimeError(
             "search_events requires psycopg. Install the 'events' extra: "

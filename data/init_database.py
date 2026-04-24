@@ -333,7 +333,7 @@ def run_all_tests(conn: sqlite3.Connection) -> None:
     print("=" * 60)
 
 
-def main():
+def main() -> int:
     """Main entry point."""
     import argparse
 
