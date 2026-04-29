@@ -3,7 +3,7 @@ name = "qontinui-mcp"
 version = "0.1.0"
 description = "MCP server for Qontinui visual automation - enables AI-powered workflow generation and execution"
 authors = ["Qontinui Team"]
-license = "MIT"
+license = "AGPL-3.0-or-later"
 readme = "README.md"
 packages = [{include = "qontinui_mcp", from = "src"}]
 
