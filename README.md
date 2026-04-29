@@ -131,4 +131,4 @@ The server uses SQLite with FTS5 for full-text search:
 
 ## License
 
-MIT License
+Licensed under the GNU Affero General Public License v3.0 or later (AGPL-3.0-or-later). See [LICENSE](LICENSE) for full terms.
