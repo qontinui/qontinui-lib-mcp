@@ -88,7 +88,11 @@ def validate_workflow_structure(workflow: dict[str, Any]) -> WorkflowValidationR
                     code="INVALID_CONNECTION",
                 )
             )
-        if step.on_failure and step.on_failure != "exit" and step.on_failure not in step_ids:
+        if (
+            step.on_failure
+            and step.on_failure != "exit"
+            and step.on_failure not in step_ids
+        ):
             errors.append(
                 ValidationError(
                     field=f"steps.{step.id}.on_failure",
@@ -204,7 +208,11 @@ def _find_reachable_steps(steps: list[Any]) -> set[str]:
         if step:
             if step.on_success and step.on_success not in reachable:
                 queue.append(step.on_success)
-            if step.on_failure and step.on_failure != "exit" and step.on_failure not in reachable:
+            if (
+                step.on_failure
+                and step.on_failure != "exit"
+                and step.on_failure not in reachable
+            ):
                 queue.append(step.on_failure)
 
     return reachable

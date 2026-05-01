@@ -340,7 +340,9 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Initialize qontinui-mcp database")
     parser.add_argument("--force", action="store_true", help="Force recreate database")
     parser.add_argument("--test", action="store_true", help="Run tests after init")
-    parser.add_argument("--test-only", action="store_true", help="Only run tests (don't init)")
+    parser.add_argument(
+        "--test-only", action="store_true", help="Only run tests (don't init)"
+    )
 
     args = parser.parse_args()
 

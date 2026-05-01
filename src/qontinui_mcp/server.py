@@ -376,9 +376,18 @@ async def list_tools() -> list[Tool]:
                             "failed_actions": {"type": "number"},
                             "skipped_actions": {"type": "number"},
                             "match_count": {"type": "number"},
-                            "states_reached": {"type": "array", "items": {"type": "string"}},
-                            "checkpoints_passed": {"type": "array", "items": {"type": "string"}},
-                            "checkpoints_failed": {"type": "array", "items": {"type": "string"}},
+                            "states_reached": {
+                                "type": "array",
+                                "items": {"type": "string"},
+                            },
+                            "checkpoints_passed": {
+                                "type": "array",
+                                "items": {"type": "string"},
+                            },
+                            "checkpoints_failed": {
+                                "type": "array",
+                                "items": {"type": "string"},
+                            },
                         },
                     },
                 },
@@ -423,7 +432,10 @@ async def list_tools() -> list[Tool]:
                                     "required": ["type", "text"],
                                 },
                             },
-                            "claude_review": {"type": "array", "items": {"type": "string"}},
+                            "claude_review": {
+                                "type": "array",
+                                "items": {"type": "string"},
+                            },
                             "max_wait_ms": {"type": "number"},
                         },
                     },
@@ -477,7 +489,10 @@ async def list_tools() -> list[Tool]:
                                     "required": ["type", "text"],
                                 },
                             },
-                            "claude_review": {"type": "array", "items": {"type": "string"}},
+                            "claude_review": {
+                                "type": "array",
+                                "items": {"type": "string"},
+                            },
                             "max_wait_ms": {"type": "number"},
                         },
                     },
@@ -643,7 +658,9 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
                     "criteria_results": exec_result.expectations_result.criteria_results,
                     "checkpoint_results": [
                         cp.model_dump()
-                        for cp in (exec_result.expectations_result.checkpoint_results or [])
+                        for cp in (
+                            exec_result.expectations_result.checkpoint_results or []
+                        )
                     ],
                     "evaluation_summary": exec_result.expectations_result.evaluation_summary,
                     "duration_ms": exec_result.expectations_result.duration_ms,
@@ -758,7 +775,9 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
 
             # Parse checkpoint definition
             try:
-                checkpoint_def = CheckpointDefinition.model_validate(checkpoint_def_dict)
+                checkpoint_def = CheckpointDefinition.model_validate(
+                    checkpoint_def_dict
+                )
             except Exception as e:
                 raise ValueError(f"Invalid checkpoint_definition: {e}")
 
@@ -783,7 +802,9 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
 
             # Parse checkpoint definition
             try:
-                checkpoint_def = CheckpointDefinition.model_validate(checkpoint_def_dict)
+                checkpoint_def = CheckpointDefinition.model_validate(
+                    checkpoint_def_dict
+                )
             except Exception as e:
                 raise ValueError(f"Invalid checkpoint_definition: {e}")
 
@@ -822,7 +843,9 @@ async def run_server() -> None:
     """Run the MCP server."""
     logger.info("Starting Qontinui MCP Server...")
     async with stdio_server() as (read_stream, write_stream):
-        await server.run(read_stream, write_stream, server.create_initialization_options())
+        await server.run(
+            read_stream, write_stream, server.create_initialization_options()
+        )
 
 
 def main() -> None:

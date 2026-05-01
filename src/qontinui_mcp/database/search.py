@@ -63,7 +63,9 @@ def search_nodes(conn: sqlite3.Connection, query: str, limit: int = 10) -> list[
     return results
 
 
-def search_workflows(conn: sqlite3.Connection, query: str, limit: int = 10) -> list[Row]:
+def search_workflows(
+    conn: sqlite3.Connection, query: str, limit: int = 10
+) -> list[Row]:
     """Search for workflows using FTS5."""
     logger.debug(f"Searching workflows for: {query}")
 
@@ -135,7 +137,9 @@ def search_workflows_by_category(conn: sqlite3.Connection, category: str) -> lis
     return [_parse_workflow_row(row) for row in rows]
 
 
-def search_nodes_by_action_type(conn: sqlite3.Connection, action_type: str) -> list[Row]:
+def search_nodes_by_action_type(
+    conn: sqlite3.Connection, action_type: str
+) -> list[Row]:
     """Search nodes by action type."""
     cursor = conn.cursor()
     cursor.execute(

@@ -29,7 +29,10 @@ logger = logging.getLogger(__name__)
 # Try to import qontinui components
 QONTINUI_AVAILABLE = False
 try:
-    from qontinui.checkpointing import CheckpointService, CheckpointTrigger  # noqa: F401
+    from qontinui.checkpointing import (
+        CheckpointService,  # noqa: F401
+        CheckpointTrigger,  # noqa: F401
+    )
     from qontinui.execution.success_criteria import (
         SuccessCriteria as QontinuiSuccessCriteria,  # noqa: F401
     )
@@ -93,10 +96,14 @@ def validate_expectations_config(
             else:
                 if "max_workflow_duration_ms" in global_config:
                     if not isinstance(global_config["max_workflow_duration_ms"], int):
-                        errors.append("global.max_workflow_duration_ms must be an integer")
+                        errors.append(
+                            "global.max_workflow_duration_ms must be an integer"
+                        )
                 if "max_action_duration_ms" in global_config:
                     if not isinstance(global_config["max_action_duration_ms"], int):
-                        errors.append("global.max_action_duration_ms must be an integer")
+                        errors.append(
+                            "global.max_action_duration_ms must be an integer"
+                        )
 
         # Validate success criteria
         if "success_criteria" in expectations:
@@ -109,7 +116,9 @@ def validate_expectations_config(
                         errors.append(f"success_criteria[{i}] must be an object")
                         continue
                     if "type" not in criterion:
-                        errors.append(f"success_criteria[{i}] missing required 'type' field")
+                        errors.append(
+                            f"success_criteria[{i}] missing required 'type' field"
+                        )
                     else:
                         valid_types = [t.value for t in SuccessCriteriaType]
                         if criterion["type"] not in valid_types:
@@ -127,11 +136,17 @@ def validate_expectations_config(
                             errors.append(
                                 f"success_criteria[{i}] with type 'max_failures' requires 'max_failures' field"
                             )
-                        if ctype == "checkpoint_passed" and "checkpoint_name" not in criterion:
+                        if (
+                            ctype == "checkpoint_passed"
+                            and "checkpoint_name" not in criterion
+                        ):
                             errors.append(
                                 f"success_criteria[{i}] with type 'checkpoint_passed' requires 'checkpoint_name' field"
                             )
-                        if ctype == "required_states" and "required_states" not in criterion:
+                        if (
+                            ctype == "required_states"
+                            and "required_states" not in criterion
+                        ):
                             errors.append(
                                 f"success_criteria[{i}] with type 'required_states' requires 'required_states' field"
                             )
@@ -155,7 +170,9 @@ def validate_expectations_config(
                     if "ocr_assertions" in checkpoint:
                         assertions = checkpoint["ocr_assertions"]
                         if not isinstance(assertions, list):
-                            errors.append(f"checkpoints.{name}.ocr_assertions must be an array")
+                            errors.append(
+                                f"checkpoints.{name}.ocr_assertions must be an array"
+                            )
                         else:
                             for j, assertion in enumerate(assertions):
                                 if not isinstance(assertion, dict):
@@ -214,27 +231,31 @@ def evaluate_ocr_assertion(
         elif assertion.assertion_type == OCRAssertionType.TEXT_ABSENT:
             passed = count == 0
             if not passed:
-                error = (
-                    f"Text '{assertion.text}' should not be present but was found {count} time(s)"
-                )
+                error = f"Text '{assertion.text}' should not be present but was found {count} time(s)"
 
         elif assertion.assertion_type == OCRAssertionType.NO_DUPLICATE_MATCHES:
             passed = count <= 1
             if not passed:
-                error = f"Text '{assertion.text}' found {count} times, expected at most 1"
+                error = (
+                    f"Text '{assertion.text}' found {count} times, expected at most 1"
+                )
 
         elif assertion.assertion_type == OCRAssertionType.TEXT_COUNT:
             expected = assertion.expected_count or 0
             passed = count == expected
             if not passed:
-                error = f"Text '{assertion.text}' found {count} times, expected {expected}"
+                error = (
+                    f"Text '{assertion.text}' found {count} times, expected {expected}"
+                )
 
         elif assertion.assertion_type == OCRAssertionType.TEXT_IN_REGION:
             # For region-specific assertions, we'd need region-aware OCR
             # This is a simplified implementation
             passed = count >= 1
             if not passed:
-                error = f"Text '{assertion.text}' not found (region assertion simplified)"
+                error = (
+                    f"Text '{assertion.text}' not found (region assertion simplified)"
+                )
 
     except Exception as e:
         passed = False
@@ -391,7 +412,9 @@ def evaluate_success_criteria(
                 detail = f"All required states reached: {sorted(required)}"
             else:
                 passed = False
-                detail = f"Missing states: {sorted(missing)} (reached: {sorted(reached)})"
+                detail = (
+                    f"Missing states: {sorted(missing)} (reached: {sorted(reached)})"
+                )
 
         elif ctype == SuccessCriteriaType.CUSTOM:
             # Safe evaluation of custom condition
@@ -407,8 +430,12 @@ def evaluate_success_criteria(
                     "skipped_actions": execution_stats.get("skipped_actions", 0),
                     "match_count": execution_stats.get("match_count", 0),
                     "states_reached": execution_stats.get("states_reached", set()),
-                    "checkpoints_passed": execution_stats.get("checkpoints_passed", set()),
-                    "checkpoints_failed": execution_stats.get("checkpoints_failed", set()),
+                    "checkpoints_passed": execution_stats.get(
+                        "checkpoints_passed", set()
+                    ),
+                    "checkpoints_failed": execution_stats.get(
+                        "checkpoints_failed", set()
+                    ),
                 }
 
                 # Parse and evaluate

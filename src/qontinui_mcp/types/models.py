@@ -105,7 +105,9 @@ class NodeParameter(BaseModel):
     """Parameter definition for a node."""
 
     name: str
-    type: Literal["string", "number", "boolean", "image", "region", "location", "object"]
+    type: Literal[
+        "string", "number", "boolean", "image", "region", "location", "object"
+    ]
     required: bool
     description: str
     default: Any | None = None

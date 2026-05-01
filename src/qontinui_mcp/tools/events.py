@@ -26,7 +26,9 @@ logger = logging.getLogger(__name__)
 # (see proj_pg_dual_schema_runner_public in memory).
 _SEARCH_PATH = "runner, public"
 
-_DEFAULT_PG_URL = "postgres://qontinui_user:qontinui_dev_password@localhost:5432/qontinui_db"
+_DEFAULT_PG_URL = (
+    "postgres://qontinui_user:qontinui_dev_password@localhost:5432/qontinui_db"
+)
 
 # Query mirrors queries/event_search.sql. Kept inline (rather than read from
 # disk) so the MCP package can ship independently of the runner checkout.
@@ -123,7 +125,9 @@ def _resolve_pg_url() -> str:
     # Accept both the runner-internal env name and a generic DATABASE_URL as
     # a fallback, preferring the runner-specific one.
     return (
-        os.environ.get("RUNNER_DATABASE_URL") or os.environ.get("DATABASE_URL") or _DEFAULT_PG_URL
+        os.environ.get("RUNNER_DATABASE_URL")
+        or os.environ.get("DATABASE_URL")
+        or _DEFAULT_PG_URL
     )
 
 
