@@ -46,3 +46,6 @@ htmlcov/
 .DS_Store
 Thumbs.db
 .worktrees/
+
+# Local qontinui CLI/tool config — machine-specific, never commit
+.qontinui/
