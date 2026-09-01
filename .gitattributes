@@ -1,0 +1,4 @@
+# A blank line in a CRLF .gitignore is a bare CR, which git reads as a
+# pattern matching EVERY directory in the repo. Pin the file to LF so an
+# editor cannot reintroduce it. Deliberately scoped to this one file.
+.gitignore text eol=lf
